@@ -6,6 +6,8 @@ A library for testing NetherNet connectivity to Bedrock servers by authenticatin
 
 The library expects the target to be a server that sends a transfer packet upon connection and will fail if not.
 
+Supports both WebRTC and JsonRPC connection types.
+
 ## Tester steps
 1. Authenticate with Xbox Live
 2. Add the target as a friend if not already
@@ -42,19 +44,19 @@ tester.start().thenAccept(v -> {
 
 ### Methods
 #### Builder
-| Method | Description |
-| --- | --- |
-| `logger(Logger logger)` | Sets the logger instance. Defaults to a no-op logger if not provided |
-| `targetGamertag(String gamertag)` | Sets the target by Xbox Live gamertag |
-| `targetXuid(String xuid)` | Sets the target by Xbox Live XUID |
-| `statusCallback(Consumer<String> callback)` | Receives human-readable status updates throughout the test |
-| `httpClient(HttpClient client)` | Sets a custom HTTP client. A default is created if not provided |
-| `scheduledExecutorService(ScheduledExecutorService executor)` | Sets a custom executor. A default is created if not provided |
+| Method                                                        | Description                                                          |
+|---------------------------------------------------------------|----------------------------------------------------------------------|
+| `logger(Logger logger)`                                       | Sets the logger instance. Defaults to a no-op logger if not provided |
+| `targetGamertag(String gamertag)`                             | Sets the target by Xbox Live gamertag                                |
+| `targetXuid(String xuid)`                                     | Sets the target by Xbox Live XUID                                    |
+| `statusCallback(Consumer<String> callback)`                   | Receives human-readable status updates throughout the test           |
+| `httpClient(HttpClient client)`                               | Sets a custom HTTP client. A default is created if not provided      |
+| `scheduledExecutorService(ScheduledExecutorService executor)` | Sets a custom executor. A default is created if not provided         |
 
 Either `targetGamertag` or `targetXuid` must be set before calling `start()`.
 
 #### Lifecycle
 
-| Method | Returns | Description                                                                                                                              |
-| --- | --- |------------------------------------------------------------------------------------------------------------------------------------------|
+| Method    | Returns                   | Description                                                                                                                              |
+|-----------|---------------------------|------------------------------------------------------------------------------------------------------------------------------------------|
 | `start()` | `CompletableFuture<Void>` | Runs the full test. Completes on success, completes exceptionally on failure |

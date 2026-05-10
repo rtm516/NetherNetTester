@@ -111,6 +111,10 @@ public class NetherNetTester {
             this.logger = new EmptyLogger();
         }
 
+        if (statusCallback == null) {
+            statusCallback = (m) -> {};
+        }
+
         if ((targetGamertag == null || targetGamertag.isBlank()) && (targetXuid == null || targetXuid.isBlank())) {
             throw new IllegalStateException("Target must be set");
         }
