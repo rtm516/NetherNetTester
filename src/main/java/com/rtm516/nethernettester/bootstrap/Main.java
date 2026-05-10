@@ -1,6 +1,10 @@
 package com.rtm516.nethernettester.bootstrap;
 
 import com.rtm516.nethernettester.NetherNetTester;
+import io.netty.util.internal.logging.InternalLoggerFactory;
+import io.netty.util.internal.logging.Slf4JLoggerFactory;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -11,6 +15,9 @@ public class Main {
     public static void main(String[] args) {
         Logger logger = new Logger(LoggerFactory.getLogger(Main.class));
         logger.setDebug(true);
+
+        Configurator.setLevel("dev.kastle", Level.DEBUG);
+        InternalLoggerFactory.setDefaultFactory(Slf4JLoggerFactory.INSTANCE);
 
 //        HttpClient httpClient = Methanol.newBuilder()
 //            .version(HttpClient.Version.HTTP_1_1)

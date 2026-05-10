@@ -192,8 +192,7 @@ public class NetherNetTester {
             signaling = new NetherNetXboxRpcSignaling(getMCTokenHeader());
             socketAddress = new NetherNetAddress(String.valueOf(connection.PmsgId()));
         } else {
-            return CompletableFuture.failedFuture(
-                new RuntimeException("Unsupported connection type: " + connection.ConnectionType()));
+            return CompletableFuture.failedFuture(new RuntimeException("Unsupported connection type: " + connection.ConnectionType()));
         }
 
         CompletableFuture<InetSocketAddress> future = new CompletableFuture<>();
