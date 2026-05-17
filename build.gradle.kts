@@ -56,6 +56,7 @@ publishing {
             from(components["java"])
         }
     }
+
     repositories {
         maven {
             name = "rtm516"
@@ -65,6 +66,11 @@ publishing {
                 else
                     "https://repo.rtm516.co.uk/releases"
             )
+
+            credentials {
+                username = project.findProperty("rtm516Username") as String?
+                password = project.findProperty("rtm516Password") as String?
+            }
         }
     }
 }
