@@ -11,23 +11,12 @@ gson = "2.11.0"
 webrtc = "1.0.4"
 netty-transport-nethernet = "1.7.0"
 
-shadow = "9.3.0"
-indra = "3.1.3"
-blossom = "2.1.0"
-minotaur = "2.8.10"
-
 [libraries]
 protocol-common = { group = "org.cloudburstmc.protocol", name = "common", version.ref = "protocol-common" }
 protocol-codec = { group = "org.cloudburstmc.protocol", name = "bedrock-codec", version.ref = "protocol-codec" }
 protocol-connection = { group = "org.cloudburstmc.protocol", name = "bedrock-connection", version.ref = "protocol-connection" }
 
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson"}
-
-# Plugins
-shadow = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
-indra-git = { group = "net.kyori", name = "indra-git", version.ref = "indra" }
-blossom = { group = "net.kyori", name = "blossom", version.ref = "blossom" }
-minotaur = { group = "com.modrinth.minotaur", name = "Minotaur", version.ref = "minotaur" }
 
 terminalconsoleappender = { group = "net.minecrell", name = "terminalconsoleappender", version.ref = "terminalconsoleappender" }
 
@@ -63,8 +52,3 @@ protocol = [
     "protocol-codec",
     "protocol-connection"
 ]
-
-[plugins]
-shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
-indra-git = { id = "net.kyori.indra.git", version.ref = "indra" }
-blossom = { id = "net.kyori.blossom", version.ref = "blossom" }
