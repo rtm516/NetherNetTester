@@ -13,7 +13,7 @@ val nativePlatforms = listOf(
     "macos-aarch64"
 )
 
-group = "com.rtm516.nethernettester"
+group = "com.rtm516"
 version = "1.0-SNAPSHOT"
 
 repositories {
