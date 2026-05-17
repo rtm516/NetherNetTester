@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.github.rtm516:NetherNetTester:latest")
+    implementation("com.github.rtm516:NetherNetTester:master-SNAPSHOT")
 }
 ```
 

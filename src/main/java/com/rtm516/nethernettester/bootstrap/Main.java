@@ -8,7 +8,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.LoggerFactory;
 
 /**
- * This is just for internal testing of the app
+ * This is just for internal testing of the library
  */
 public class Main {
 
