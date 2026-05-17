@@ -20,11 +20,11 @@ Supports both WebRTC and JsonRPC connection types.
 If you want to use this library in your project, add the following to your build.gradle.kts:
 ```kotlin
 repositories {
-    maven("https://jitpack.io")
+    maven("https://repo.rtm516.co.uk/main")
 }
 
 dependencies {
-    implementation("com.github.rtm516:NetherNetTester:master-SNAPSHOT")
+    implementation("com.rtm516:NetherNetTester:1.0-SNAPSHOT")
 }
 ```
 

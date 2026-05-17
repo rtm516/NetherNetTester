@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - '.idea/copyright/*.xml'
+      - '.gitignore'
+      - 'LICENSE'
+      - 'README.md'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Publish to Maven Repository
+        if: ${{ success() && github.repository == 'rtm516/NetherNetTester' && (github.ref_name == 'master') }}
+        run: ./gradlew publish
+        env:
+          ORG_GRADLE_PROJECT_rtm516Username: ${{ vars.DEPLOY_USER }}
+          ORG_GRADLE_PROJECT_rtm516Password: ${{ secrets.DEPLOY_PASS }}

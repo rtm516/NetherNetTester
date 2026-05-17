@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     application
+    id("maven-publish")
 }
 
 val nativePlatforms = listOf(
@@ -47,4 +48,18 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "rtm516"
+            url = uri(
+                if (version.toString().endsWith("-SNAPSHOT"))
+                    "https://repo.rtm516.co.uk/snapshots"
+                else
+                    "https://repo.rtm516.co.uk/releases"
+            )
+        }
+    }
 }
