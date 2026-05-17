@@ -1,1 +1,1 @@
-rootProject.name = "NethernetTester"
+rootProject.name = "NetherNetTester"
