@@ -3,6 +3,7 @@ package com.rtm516.nethernettester;
 import com.rtm516.nethernettester.utils.ForgeryUtils;
 import dev.kastle.netty.channel.nethernet.config.NetherNetAddress;
 import org.cloudburstmc.protocol.bedrock.BedrockClientSession;
+import org.cloudburstmc.protocol.bedrock.data.DisconnectFailReason;
 import org.cloudburstmc.protocol.bedrock.data.PacketCompressionAlgorithm;
 import org.cloudburstmc.protocol.bedrock.data.auth.AuthType;
 import org.cloudburstmc.protocol.bedrock.data.auth.TokenPayload;
@@ -77,7 +78,7 @@ public class SessionPacketHandler implements BedrockPacketHandler {
 
     @Override
     public PacketSignal handle(DisconnectPacket packet) {
-        onDisconnect(packet.getReason().toString());
+        onDisconnect(packet.getReason() != DisconnectFailReason.UNKNOWN ? packet.getReason().toString() : packet.getKickMessage());
         return PacketSignal.HANDLED;
     }
 
