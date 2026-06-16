@@ -5,8 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.rtm516.nethernettester.json.DateConverter;
 import com.rtm516.nethernettester.json.InstantConverter;
 import org.cloudburstmc.protocol.bedrock.codec.BedrockCodec;
-import org.cloudburstmc.protocol.bedrock.codec.v944.Bedrock_v944;
-import org.cloudburstmc.protocol.bedrock.codec.v975.Bedrock_v975;
+import org.cloudburstmc.protocol.bedrock.codec.v1001.Bedrock_v1001;
 
 import java.net.URI;
 import java.time.Instant;
@@ -37,5 +36,5 @@ public class Constants {
     /**
      * Used for the micro nethernet server that transfers the client to the real server
      */
-    public static final BedrockCodec BEDROCK_CODEC = Bedrock_v975.CODEC;
+    public static final BedrockCodec BEDROCK_CODEC = Bedrock_v1001.CODEC;
 }
