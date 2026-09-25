@@ -2,6 +2,7 @@ package com.rtm516.nethernettester;
 
 import com.github.mizosoft.methanol.Methanol;
 import com.rtm516.nethernettester.models.AddFriendResponse;
+import com.rtm516.nethernettester.models.ConnectionInfo;
 import com.rtm516.nethernettester.models.FollowerResponse;
 import com.rtm516.nethernettester.models.SessionHandlesResponse;
 import com.rtm516.nethernettester.nethernet.initializer.NetherNetBedrockChannelInitializer;
@@ -168,20 +169,20 @@ public class NetherNetTester {
             });
     }
 
-    private SessionHandlesResponse.Connection findNethernetSession(String xuid) {
-        SessionHandlesResponse.Connection nethernetConnection = findNethernetConnection(xuid);
+    private ConnectionInfo findNethernetSession(String xuid) {
+        ConnectionInfo nethernetConnection = findNethernetConnection(xuid);
         if (nethernetConnection == null) {
             throw new RuntimeException("Unable to find session or its not a NetherNet connection");
         }
 
-        var typeName = nethernetConnection.ConnectionType() == Constants.ConnectionTypeWebRTC ? "WebRTC" : "JsonRPC";
-        logger.info("Found NetherNet session " + nethernetConnection.NetherNetId() + " using " + typeName);
-        statusCallback.accept("Located NetherNet connection with ID " + nethernetConnection.NetherNetId() + " using " + typeName);
+        var typeName = nethernetConnection.connection().ConnectionType() == Constants.ConnectionTypeWebRTC ? "WebRTC" : "JsonRPC";
+        logger.info("Found NetherNet session " + nethernetConnection.connection().NetherNetId() + " using " + typeName);
+        statusCallback.accept("Located NetherNet connection with ID " + nethernetConnection.connection().NetherNetId() + " using " + typeName);
 
         return nethernetConnection;
     }
 
-    private CompletableFuture<InetSocketAddress> connectToSession(SessionHandlesResponse.Connection connection) {
+    private CompletableFuture<InetSocketAddress> connectToSession(ConnectionInfo connectionInfo) {
         try {
             LibDataChannelArchDetect.initialize();
         } catch (LinkageError e) {
@@ -192,14 +193,14 @@ public class NetherNetTester {
         // Setup either WebRTC or JsonRPC signaling depending on the connection type
         NetherNetClientSignaling signaling;
         NetherNetAddress socketAddress;
-        if (connection.ConnectionType() == Constants.ConnectionTypeWebRTC) {
+        if (connectionInfo.connection().ConnectionType() == Constants.ConnectionTypeWebRTC) {
             signaling = new NetherNetXboxSignaling(getMCTokenHeader());
-            socketAddress = new NetherNetAddress(String.valueOf(connection.NetherNetId()));
-        } else if (connection.ConnectionType() == Constants.ConnectionTypeJsonRpc) {
+            socketAddress = new NetherNetAddress(String.valueOf(connectionInfo.connection().NetherNetId()));
+        } else if (connectionInfo.connection().ConnectionType() == Constants.ConnectionTypeJsonRpc) {
             signaling = new NetherNetXboxRpcSignaling(getMCTokenHeader());
-            socketAddress = new NetherNetAddress(String.valueOf(connection.PmsgId()));
+            socketAddress = new NetherNetAddress(String.valueOf(connectionInfo.connection().PmsgId()));
         } else {
-            return CompletableFuture.failedFuture(new RuntimeException("Unsupported connection type: " + connection.ConnectionType()));
+            return CompletableFuture.failedFuture(new RuntimeException("Unsupported connection type: " + connectionInfo.connection().ConnectionType()));
         }
 
         CompletableFuture<InetSocketAddress> future = new CompletableFuture<>();
@@ -222,7 +223,7 @@ public class NetherNetTester {
                 protected void initSession(LoggingBedrockClientSession session) {
                     statusCallback.accept("Connected to NetherNet session");
                     logger.debug("Session initialized: " + session);
-                    session.setCodec(Constants.BEDROCK_CODEC);
+                    session.setCodec(Constants.BEDROCK_CODEC.toBuilder().protocolVersion(connectionInfo.protocolVersion()).build());
 //                    session.setLogging(true);
                     session.setPacketHandler(new SessionPacketHandler(session, logger, authManager, socketAddress, statusCallback, future, scheduledExecutorService));
                 }
@@ -266,7 +267,7 @@ public class NetherNetTester {
         }
     }
 
-    private SessionHandlesResponse.Connection findNethernetConnection(String xboxFriendXuid) {
+    private ConnectionInfo findNethernetConnection(String xboxFriendXuid) {
         logger.info("Getting sessions...");
         HttpRequest sessionHandlesRequest = HttpRequest.newBuilder()
             .uri(URI.create("https://sessiondirectory.xboxlive.com/handles/query?include=relatedInfo,customProperties"))
@@ -289,9 +290,11 @@ public class NetherNetTester {
                 return null;
             }
 
-            logger.info("Session found");
+            String message = "Session found on " + foundSession.customProperties().version() + " (" + foundSession.customProperties().protocol() + ")";
+            logger.info(message);
+            statusCallback.accept(message);
         } catch (Exception e) {
-            logger.error("Failed to get friends", e);
+            logger.error("Failed to get session", e);
             return null;
         }
 
@@ -301,7 +304,7 @@ public class NetherNetTester {
             return null;
         }
 
-        return nethernetConnection;
+        return new ConnectionInfo(nethernetConnection, foundSession.customProperties().protocol());
     }
 
     private CompletableFuture<FollowerResponse.Person> checkFriendsList() {

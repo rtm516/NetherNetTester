@@ -53,7 +53,7 @@ public class SessionPacketHandler implements BedrockPacketHandler {
 
         // Kick off the connection
         RequestNetworkSettingsPacket requestNetworkSettingsPacket = new RequestNetworkSettingsPacket();
-        requestNetworkSettingsPacket.setProtocolVersion(Constants.BEDROCK_CODEC.getProtocolVersion());
+        requestNetworkSettingsPacket.setProtocolVersion(session.getCodec().getProtocolVersion());
         session.sendPacket(requestNetworkSettingsPacket);
     }
 
@@ -93,7 +93,7 @@ public class SessionPacketHandler implements BedrockPacketHandler {
 
         try {
             LoginPacket loginPacket = new LoginPacket();
-            loginPacket.setProtocolVersion(Constants.BEDROCK_CODEC.getProtocolVersion());
+            loginPacket.setProtocolVersion(session.getCodec().getProtocolVersion());
             loginPacket.setClientJwt(ForgeryUtils.forgeOnlineSkinData(authManager.getManager(), new JSONObject(), netherNetAddress));
             loginPacket.setAuthPayload(new TokenPayload(authManager.getManager().getMinecraftMultiplayerToken().getCached().getToken(), AuthType.FULL));
             session.sendPacket(loginPacket);
