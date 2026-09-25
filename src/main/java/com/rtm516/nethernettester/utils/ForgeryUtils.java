@@ -1,7 +1,7 @@
 package com.rtm516.nethernettester.utils;
 
-import dev.kastle.netty.channel.nethernet.config.NetherNetAddress;
 import net.raphimc.minecraftauth.bedrock.BedrockAuthManager;
+import org.cloudburstmc.netty.channel.nethernet.config.NetherNetAddress;
 import org.jose4j.json.internal.json_simple.JSONObject;
 import org.jose4j.jws.JsonWebSignature;
 import org.jose4j.jwx.HeaderParameterNames;

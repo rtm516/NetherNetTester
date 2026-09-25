@@ -9,17 +9,17 @@ import com.rtm516.nethernettester.utils.EmptyLogger;
 import com.rtm516.nethernettester.utils.FutureUtils;
 import com.rtm516.nethernettester.utils.NamedThreadFactory;
 import com.rtm516.nethernettester.utils.PingUtil;
-import dev.kastle.netty.channel.nethernet.NetherNetChannelFactory;
-import dev.kastle.netty.channel.nethernet.config.NetherChannelOption;
-import dev.kastle.netty.channel.nethernet.config.NetherNetAddress;
-import dev.kastle.netty.channel.nethernet.signaling.NetherNetClientSignaling;
-import dev.kastle.netty.channel.nethernet.signaling.NetherNetXboxRpcSignaling;
-import dev.kastle.netty.channel.nethernet.signaling.NetherNetXboxSignaling;
-import dev.kastle.webrtc.PeerConnectionFactory;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.nio.NioEventLoopGroup;
+import org.cloudburstmc.netty.channel.nethernet.NetherNetChannelFactory;
+import org.cloudburstmc.netty.channel.nethernet.config.NetherChannelOption;
+import org.cloudburstmc.netty.channel.nethernet.config.NetherNetAddress;
+import org.cloudburstmc.netty.channel.nethernet.signaling.NetherNetClientSignaling;
+import org.cloudburstmc.netty.channel.nethernet.signaling.NetherNetXboxRpcSignaling;
+import org.cloudburstmc.netty.channel.nethernet.signaling.NetherNetXboxSignaling;
 import org.cloudburstmc.protocol.bedrock.BedrockPeer;
+import tel.schich.libdatachannel.LibDataChannelArchDetect;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -182,6 +182,13 @@ public class NetherNetTester {
     }
 
     private CompletableFuture<InetSocketAddress> connectToSession(SessionHandlesResponse.Connection connection) {
+        try {
+            LibDataChannelArchDetect.initialize();
+        } catch (LinkageError e) {
+            logger.error("Failed to load the libdatachannel native library", e);
+            return CompletableFuture.failedFuture(e);
+        }
+
         // Setup either WebRTC or JsonRPC signaling depending on the connection type
         NetherNetClientSignaling signaling;
         NetherNetAddress socketAddress;
@@ -203,7 +210,7 @@ public class NetherNetTester {
 
         Bootstrap b = new Bootstrap();
         b.group(eventLoopGroup)
-            .channelFactory(NetherNetChannelFactory.client(new PeerConnectionFactory(), signaling))
+            .channelFactory(NetherNetChannelFactory.client(signaling))
             .option(NetherChannelOption.NETHER_CLIENT_HANDSHAKE_TIMEOUT_MS, Constants.TIMEOUT_MS)
             .handler(new NetherNetBedrockChannelInitializer<LoggingBedrockClientSession>() {
                 @Override

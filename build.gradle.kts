@@ -4,15 +4,6 @@ plugins {
     id("maven-publish")
 }
 
-val nativePlatforms = listOf(
-    "windows-x86_64",
-    "windows-aarch64",
-    "linux-x86_64",
-    "linux-aarch64",
-    "macos-x86_64",
-    "macos-aarch64"
-)
-
 group = "com.rtm516"
 version = "1.0-SNAPSHOT"
 
@@ -27,16 +18,9 @@ dependencies {
     api(libs.methanol)
     api(libs.minecraftauth)
     api(libs.bundles.protocol)
-    api(libs.netty.transport.nethernet)
 
-    api(libs.webrtc)
-    nativePlatforms.forEach { platform ->
-        runtimeOnly(libs.webrtc) {
-            artifact {
-                classifier = platform
-            }
-        }
-    }
+    api(libs.nethernet.transport)
+    api(libs.libdatachannel)
 
     api(libs.terminalconsoleappender) {
         exclude("org.apache.logging.log4j")
