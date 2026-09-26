@@ -1,17 +1,10 @@
 plugins {
     id("java-library")
-    application
     id("maven-publish")
 }
 
 group = "com.rtm516"
 version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-    maven("https://repo.opencollab.dev/main/")
-    maven("https://maven.lenni0451.net/snapshots")
-}
 
 dependencies {
     api(libs.gson)
@@ -21,13 +14,6 @@ dependencies {
 
     api(libs.nethernet.transport)
     api(libs.libdatachannel)
-
-    api(libs.terminalconsoleappender) {
-        exclude("org.apache.logging.log4j")
-        exclude("org.jline")
-    }
-    api(libs.bundles.jline)
-    api(libs.bundles.log4j)
 }
 
 tasks.test {
